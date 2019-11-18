@@ -5,13 +5,13 @@
   <body>
 
     <div id="caja">
-      <div class="pieza" data-value="1" data-pos="1"> 1 </div>
-      <div class="pieza" data-value="2"> 2 </div>
-      <div class="pieza" data-value="3"> 3 </div>
-      <div class="pieza" data-value="4"> 4 </div>
+      <div class="pieza" data-value="1" data-pos="5"> 1 </div>
+      <div class="pieza" data-value="2" data-pos="7"> 2 </div>
+      <div class="pieza" data-value="3" data-pos="1"> 3 </div>
+      <div class="pieza" data-value="4" data-pos="6"> 4 </div>
       <div class="pieza" data-value="5" data-pos="8"> 5 </div>
-      <div class="pieza" data-value="6"> 6 </div>
-      <div class="pieza" data-value="7"> 7 </div>
+      <div class="pieza" data-value="6" data-pos="2"> 6 </div>
+      <div class="pieza" data-value="7" data-pos="4"> 7 </div>
       <div class="pieza" data-value="8" data-pos="9"> 8 </div>
     </div>
 
@@ -22,7 +22,7 @@
       }
 
       #caja {
-        background-color: gray;
+        background-color: #cccccc;
         margin: auto;
         width: 200px;
         height: 200px;
@@ -40,7 +40,7 @@
       }
 
       .pieza {
-        background-color: pink;
+        background-color: #00cca1;
         color: white;
         font-size: 24px;
         text-align: center;
@@ -77,6 +77,77 @@
     </style>
 
     <script type="text/javascript">
+      function posicionVacia(caja) {
+        let posiciones = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let piezas = caja.querySelectorAll('.pieza');
+
+        let vacias = new Set(posiciones);
+
+        for(let pieza of piezas) {
+          let pos = parseInt(pieza.dataset.pos);
+          vacias.delete(pos);
+        }
+        return vacias.values().next().value;
+      }
+
+      function posicionesJuntas(p1, p2) {
+        let juntas;
+        switch(p1) {
+          case 1:
+            juntas = p2 == 2 || p2 == 4;
+            break;
+          case 2:
+            juntas = p2 == 1 || p2 == 3 || p2 == 5;
+            break;
+          case 3:
+            juntas = p2 == 2 || p2 == 6;
+            break;
+          case 4:
+            juntas = p2 == 1 || p2 == 5 || p2 == 7;
+            break;
+          case 5:
+            juntas = p2 == 2 || p2 == 6 || p2 == 8 || p2 == 4;
+            break;
+          case 6:
+            juntas = p2 == 3 || p2 == 5 || p2 == 9;
+            break;
+          case 7:
+            juntas = p2 == 4 || p2 == 8;
+            break;
+          case 8:
+            juntas = p2 == 5 || p2 == 7 || p2 == 9;
+            break;
+          case 9:
+            juntas = p2 == 6 || p2 == 8;
+            break;
+        }
+        return juntas;
+      }
+
+      function moverPieza(caja, pieza, pos) {
+        pieza.dataset.pos = pos;
+      }
+
+      function clickPieza(caja, pieza) {
+        let pos = parseInt(pieza.dataset.pos);
+        let vacia = posicionVacia(caja);
+
+        if(posicionesJuntas(pos, vacia)) {
+          moverPieza(caja, pieza, vacia);
+        }
+      }
+
+      function initCaja() {
+        let caja = document.getElementById('caja');
+
+        caja.addEventListener('click', event => {
+          if(event.target.classList.contains('pieza')) {
+            clickPieza(caja, event.target);
+          }
+        });
+      }
+
+      initCaja();
     </script>
 
   </body>
