@@ -14,11 +14,35 @@
       <div class="pieza" data-value="7" data-pos="4"> 7 </div>
       <div class="pieza" data-value="8" data-pos="9"> 8 </div>
     </div>
+    <div id="botones">
+      <button id="reiniciar">
+        Reiniciar
+      </button>
+    </div>
 
     <style>
       body {
         background: rgb(255,197,66);
         background: linear-gradient(90deg, rgba(255,197,66,1) 0%, rgba(245,66,255,1) 100%); 
+      }
+
+      #botones {
+        margin: auto;
+        margin-top: 10px;
+        width: 200px;
+        text-align: center;
+      }
+
+      #reiniciar {
+        display: inline;
+        border-radius: 0;
+        border: 0;
+        background-color: #cccccc;
+        color: #333;
+      }
+
+      #reiniciar:hover {
+        cursor: pointer;
       }
 
       #caja {
@@ -77,6 +101,14 @@
     </style>
 
     <script type="text/javascript">
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
       function posicionVacia(caja) {
         let posiciones = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         let piezas = caja.querySelectorAll('.pieza');
@@ -137,14 +169,32 @@
         }
       }
 
+      function reordenarPiezas(caja) {
+        let piezas = caja.querySelectorAll('.pieza');
+
+        let posiciones = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        for(let i = 0; i < piezas.length; i++) {
+          piezas[i].dataset.pos = posiciones[i];
+        }
+      }
+
       function initCaja() {
         let caja = document.getElementById('caja');
+        let botonReiniciar = document.getElementById('reiniciar');
 
         caja.addEventListener('click', event => {
           if(event.target.classList.contains('pieza')) {
             clickPieza(caja, event.target);
           }
         });
+
+        botonReiniciar.addEventListener('click', event => {
+          reordenarPiezas(caja);
+        });
+
+
+        reordenarPiezas(caja);
       }
 
       initCaja();
